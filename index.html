@@ -3,62 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drachin - Nonton Drama Asia</title>
+    <title>Drachin - Nonton & Download</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* === TAMPILAN PREMIUM DARK MODE === */
-        :root { --bg-dark: #0f0f0f; --text-main: #fff; --red: #e62117; --gray: #aaaaaa; }
-        body { margin: 0; font-family: 'Roboto', sans-serif; background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; }
+        /* === TEMA DARK MODE PREMIUM === */
+        :root { --bg-dark: #0f0f0f; --text-white: #ffffff; --red: #ff0000; --gray: #aaaaaa; --card-bg: #1e1e1e; }
+        body { margin: 0; font-family: 'Roboto', sans-serif; background-color: var(--bg-dark); color: var(--text-white); overflow-x: hidden; }
         a { text-decoration: none; color: inherit; }
         
-        /* Navbar */
-        .navbar { display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 56px; background: #0f0f0f; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #2a2a2a; }
+        /* Navbar Sticky */
+        .navbar { display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 56px; background: #0f0f0f; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #333; }
         .logo { font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
         .logo span { color: var(--red); font-size: 24px; }
-        .btn-vip { background: var(--red); padding: 6px 14px; border-radius: 20px; color: white; font-size: 13px; font-weight: bold; margin-left: 10px; }
+        
+        /* Tombol Header (Sumber Cuan Direct Link) */
+        .header-btn { font-size: 13px; font-weight: 600; margin-left: 10px; cursor: pointer; }
+        .btn-vip { background: var(--red); padding: 6px 14px; border-radius: 20px; color: white; }
 
-        /* Container */
+        /* Container Utama */
         .main-container { max-width: 1200px; margin: 0 auto; padding: 15px; min-height: 80vh; }
 
-        /* === GALERI VIDEO (Halaman Utama) === */
-        #galleryView { display: block; }
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; row-gap: 24px; }
-        @media(min-width: 600px) { .video-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; } }
+        /* === IKLAN NATIVE === */
+        .ad-native-wrapper { 
+            background: #111; border: 1px dashed #333; padding: 5px; 
+            margin: 15px 0; border-radius: 6px; text-align: center;
+            min-height: 100px; display: flex; align-items: center; justify-content: center;
+        }
 
-        .video-card { cursor: pointer; display: flex; flex-direction: column; group: hover; }
-        .video-card:hover .thumb-img { transform: scale(1.05); }
-        .thumb-box { position: relative; width: 100%; aspect-ratio: 16/9; background: #222; border-radius: 10px; overflow: hidden; }
-        .thumb-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-        .duration { position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.8); color: #fff; padding: 2px 4px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        /* === GALERI VIDEO (GRID) === */
+        #galleryView { display: block; }
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; row-gap: 20px; }
+        @media(min-width: 600px) { .video-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; } }
+
+        .video-card { cursor: pointer; display: flex; flex-direction: column; }
+        .thumb-box { position: relative; width: 100%; aspect-ratio: 16/9; background: #222; border-radius: 8px; overflow: hidden; }
+        .thumb-img { width: 100%; height: 100%; object-fit: cover; }
+        .duration { position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.85); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; }
         
-        .vid-info { margin-top: 10px; display: flex; gap: 10px; }
+        .vid-info { margin-top: 8px; display: flex; gap: 10px; }
         .avatar { width: 36px; height: 36px; border-radius: 50%; background: #333; flex-shrink: 0; }
         .meta-text { display: flex; flex-direction: column; width: 100%; }
-        .vid-title { font-size: 14px; font-weight: 500; line-height: 1.3; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: #f1f1f1; }
+        .vid-title { font-size: 14px; font-weight: 500; line-height: 1.3; margin-bottom: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: #f1f1f1; }
         .vid-chan { font-size: 12px; color: var(--gray); }
 
-        /* === PLAYER VIDEO (Halaman Nonton) === */
+        /* === PLAYER VIDEO (PERBAIKAN FULL LAYAR HP) === */
         #playerView { display: none; }
-        .player-layout { display: grid; grid-template-columns: 1fr; gap: 24px; }
+        
+        /* Layout Desktop */
+        .player-layout { display: grid; grid-template-columns: 1fr; gap: 20px; }
         @media (min-width: 900px) { .player-layout { grid-template-columns: 2.5fr 1fr; } } 
 
-        .player-frame { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        iframe, video { width: 100%; height: 100%; border: none; }
+        /* Frame Video agar Responsif Penuh */
+        .player-frame { 
+            position: relative; 
+            width: 100%; 
+            /* Trik Aspect Ratio 16:9 agar tidak gepeng/kecil */
+            padding-bottom: 56.25%; 
+            background: #000; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        
+        /* Di HP, player menempel ke tepi agar besar */
+        @media (max-width: 600px) {
+            .main-container { padding: 0; } /* Hilangkan padding body */
+            .player-frame { border-radius: 0; } /* Kotak penuh */
+            .navbar, .watch-info, .watch-actions, .ad-native-wrapper { padding-left: 15px; padding-right: 15px; }
+            .video-grid { padding: 15px; } /* Kembalikan padding untuk grid */
+        }
 
-        .watch-title { font-size: 18px; font-weight: 700; margin: 15px 0 10px 0; line-height: 1.4; }
-        .watch-actions { display: flex; gap: 10px; border-bottom: 1px solid #2a2a2a; padding-bottom: 15px; margin-bottom: 15px; }
-        .btn-action { background: #272727; color: white; border: none; padding: 8px 16px; border-radius: 18px; cursor: pointer; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .btn-download { background: #fff; color: #0f0f0f; font-weight: bold; }
-        .btn-download:hover { background: #eee; }
+        .player-frame iframe, .player-frame video { 
+            position: absolute; top: 0; left: 0; 
+            width: 100%; height: 100%; border: none; 
+        }
 
-        .ad-box { background: #1a1a1a; padding: 10px; margin-bottom: 20px; border-radius: 8px; text-align: center; }
-        .back-nav { display: flex; align-items: center; color: var(--gray); margin-bottom: 15px; cursor: pointer; font-size: 14px; font-weight: 500; }
-        .back-nav:hover { color: #fff; }
+        .watch-info { margin-top: 15px; }
+        .watch-title { font-size: 18px; font-weight: 700; line-height: 1.4; margin-bottom: 15px; }
+        
+        .watch-actions { display: flex; gap: 10px; padding-bottom: 15px; border-bottom: 1px solid #333; overflow-x: auto; }
+        .btn-action { 
+            background: #272727; color: white; border: none; 
+            padding: 10px 20px; border-radius: 24px; cursor: pointer; 
+            font-size: 14px; font-weight: 600; white-space: nowrap; flex-shrink: 0;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .btn-download { background: #fff; color: #000; } /* Tombol Cuan Paling Terang */
+        
+        .back-nav { padding: 15px 15px 5px 15px; color: var(--gray); font-size: 14px; cursor: pointer; display: inline-block; }
 
         /* Loader */
-        #loader { text-align: center; padding: 50px; color: var(--gray); }
-        .error-msg { color: #ff4444; background: rgba(255,0,0,0.1); padding: 10px; border-radius: 8px; display: inline-block; margin-top: 20px; }
+        #loader { text-align: center; padding: 60px 20px; color: var(--gray); }
     </style>
 
     <script type="text/javascript" src="https://ridernoodleacerbity.com/c9/c0/46/c9c04611f8fb3b0b21da4b49fb98d3fa.js"></script>
@@ -68,73 +104,81 @@
     <nav class="navbar">
         <a href="?" class="logo"><span>▶</span> Drachin</a>
         <div>
-            <a href="https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f" target="_blank" style="font-size:14px; font-weight:500;">Upload</a>
-            <a href="https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f" target="_blank" class="btn-vip">App</a>
+            <a href="https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f" target="_blank" class="header-btn">Upload</a>
+            <a href="https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f" target="_blank" class="header-btn btn-vip">Get App</a>
         </div>
     </nav>
 
-    <div class="main-container">
+    <div id="loader">
+        <h3>Memuat Video...</h3>
+        <p style="font-size:12px;">Mohon tunggu sebentar</p>
+    </div>
 
-        <div id="loader">
-            <div id="spinner">Sedang Memuat Video...</div>
-            <div id="errorText" class="error-msg" style="display:none;"></div>
-        </div>
+    <div id="contentApp" style="display:none;"> <div class="main-container">
 
-        <div id="galleryView" style="display:none;">
-            <div class="ad-box">
-                <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
-                <div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
+            <div id="galleryView">
+                
+                <div class="ad-native-wrapper">
+                    <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
+                    <div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
+                </div>
+
+                <div class="video-grid" id="gridTarget"></div>
             </div>
-            <div class="video-grid" id="gridTarget"></div>
-        </div>
 
-        <div id="playerView" style="display:none;">
-            <div onclick="window.location.href='?'" class="back-nav">← Kembali ke Beranda</div>
+            <div id="playerView">
+                <div onclick="window.location.href='?'" class="back-nav">← Kembali ke Galeri</div>
 
-            <div class="player-layout">
-                <div class="left-col">
-                    <div class="player-frame">
-                        <iframe id="dmPlayer" allow="autoplay; fullscreen" allowfullscreen style="display:none;"></iframe>
-                        <video id="webPlayer" controls playsinline style="display:none;"></video>
-                    </div>
+                <div class="player-layout">
+                    <div class="left-col">
+                        
+                        <div class="player-frame">
+                            <iframe id="dmPlayer" allow="autoplay; fullscreen" allowfullscreen style="display:none;"></iframe>
+                            <video id="webPlayer" controls playsinline style="display:none;"></video>
+                        </div>
 
-                    <h1 id="vidTitle" class="watch-title">Judul Video</h1>
-                    
-                    <div class="watch-actions">
-                        <button class="btn-action btn-download" onclick="window.open('https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f', '_blank')">
-                            ⬇ Download HD
-                        </button>
-                        <button class="btn-action">👍 Like</button>
-                        <button class="btn-action">↗ Share</button>
-                    </div>
+                        <div class="watch-info">
+                            <div class="ad-native-wrapper">
+                                <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
+                                <div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
+                            </div>
 
-                    <div style="background:#1a1a1a; padding:15px; border-radius:12px; display:flex; gap:12px; align-items:center;">
-                        <div class="avatar" style="background:var(--red); display:flex; align-items:center; justify-content:center; font-weight:bold;">DR</div>
-                        <div>
-                            <div style="font-weight:bold; font-size:14px;">Drachin Official</div>
-                            <div style="font-size:12px; color:var(--gray);">Video Terbaru Update Setiap Hari</div>
+                            <h1 id="vidTitle" class="watch-title">...</h1>
+                            
+                            <div class="watch-actions">
+                                <button class="btn-action btn-download" onclick="window.open('https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f', '_blank')">
+                                    ⬇ Download HD
+                                </button>
+                                <button class="btn-action">👍 Like</button>
+                                <button class="btn-action">↗ Share</button>
+                            </div>
+
+                            <div style="background:#1a1a1a; padding:12px; border-radius:8px; display:flex; gap:12px; align-items:center; margin-top:15px;">
+                                <div class="avatar" style="background:var(--red); display:flex; align-items:center; justify-content:center; font-weight:bold;">DR</div>
+                                <div>
+                                    <div style="font-weight:bold; font-size:14px;">Drachin Official</div>
+                                    <div style="font-size:12px; color:var(--gray);">1.2M Subscribers</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="right-col">
-                    <div class="ad-box" style="font-size:12px; color:#555;">Sponsored Ad</div>
-                    <div id="sideGrid" style="display:flex; flex-direction:column; gap:12px;"></div>
+                    <div class="right-col">
+                        <h4 style="margin:0 0 15px 0; padding-left:15px;">Rekomendasi</h4>
+                        <div id="sideGrid" style="display:flex; flex-direction:column; gap:12px; padding:0 15px;"></div>
+                    </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
 
     <script>
-        // === SETTING ===
-        const FILE_DATABASE = "videos.txt"; 
+        const DATABASE = "videos.txt"; 
 
-        // === ELEMENT UI ===
+        // UI Elements
         const loader = document.getElementById('loader');
-        const spinner = document.getElementById('spinner');
-        const errorText = document.getElementById('errorText');
-        
+        const contentApp = document.getElementById('contentApp');
         const galleryView = document.getElementById('galleryView');
         const playerView = document.getElementById('playerView');
         const gridTarget = document.getElementById('gridTarget');
@@ -144,81 +188,60 @@
         const webPlayer = document.getElementById('webPlayer');
         const vidTitle = document.getElementById('vidTitle');
 
-        // === AMBIL URL ID ===
+        // URL Params
         const urlParams = new URLSearchParams(window.location.search);
         const currentId = urlParams.get('id');
 
-        // === FUNGSI UTAMA ===
-        async function mulaiWeb() {
+        async function init() {
             try {
-                // 1. Coba ambil videos.txt
-                // Tambah timestamp (?t=...) agar tidak nyangkut di cache browser
-                const response = await fetch(FILE_DATABASE + '?t=' + Date.now());
+                // Load Database dengan timestamp agar selalu update
+                const res = await fetch(DATABASE + '?t=' + Date.now());
+                if (!res.ok) throw new Error("Gagal baca videos.txt");
+                const text = await res.text();
                 
-                if (!response.ok) {
-                    throw new Error("Gagal membaca file videos.txt. Pastikan file sudah diupload!");
-                }
-                
-                const text = await response.text();
-                
-                // 2. Olah Data (Pisahkan ID dan Judul)
-                const listVideo = text.split('\n')
-                    .filter(baris => baris.includes('|')) // Hanya ambil baris yang ada tanda |
-                    .map(baris => {
-                        const pecah = baris.split('|');
-                        return { 
-                            id: pecah[0].trim(), 
-                            judul: pecah[1].trim() 
-                        };
+                const videos = text.split('\n')
+                    .filter(line => line.includes('|'))
+                    .map(line => {
+                        const p = line.split('|');
+                        return { id: p[0].trim(), title: p[1].trim() };
                     });
 
-                if (listVideo.length === 0) {
-                    throw new Error("File videos.txt kosong atau format salah (harus ID|Judul).");
-                }
+                if (videos.length === 0) throw new Error("Video kosong");
 
-                // 3. Data Berhasil Dimuat -> Hilangkan Loading
+                // Selesai Loading
                 loader.style.display = 'none';
+                contentApp.style.display = 'block';
 
-                // 4. Tentukan Tampilan (Player atau Galeri)
                 if (currentId) {
-                    bukaPlayer(currentId, listVideo);
+                    renderPlayer(currentId, videos);
                 } else {
-                    bukaGaleri(listVideo);
+                    renderGallery(videos);
                 }
 
             } catch (err) {
-                // Jika Error, Tampilkan Pesan di Layar (Bukan Console)
-                spinner.style.display = 'none';
-                errorText.style.display = 'block';
-                errorText.innerHTML = "<b>TERJADI KESALAHAN:</b><br>" + err.message;
+                loader.innerHTML = `<span style="color:red">Error: ${err.message}</span><br>Pastikan file videos.txt ada.`;
             }
         }
 
-        // === TAMPILAN GALERI ===
-        function bukaGaleri(videos) {
+        function renderGallery(videos) {
             galleryView.style.display = 'block';
+            playerView.style.display = 'none';
             
             let html = '';
-            videos.forEach(vid => {
-                // Gambar Thumbnail (Auto Fallback jika error)
-                // Default asumsi Dailymotion
-                let thumbUrl = `https://www.dailymotion.com/thumbnail/video/${vid.id}`;
-                if (vid.id.startsWith('http')) thumbUrl = 'https://via.placeholder.com/640x360/222/fff?text=VIDEO';
+            videos.forEach(v => {
+                let thumb = `https://www.dailymotion.com/thumbnail/video/${v.id}`;
+                if(v.id.startsWith('http')) thumb = 'https://via.placeholder.com/640x360/111/fff?text=VIDEO';
                 
-                // Link Halaman Nonton
-                const linkNonton = `?id=${encodeURIComponent(vid.id)}`;
-
                 html += `
-                <a href="${linkNonton}" class="video-card">
+                <a href="?id=${encodeURIComponent(v.id)}" class="video-card">
                     <div class="thumb-box">
-                        <img src="${thumbUrl}" class="thumb-img" loading="lazy" 
-                             onerror="this.src='https://via.placeholder.com/640x360/333/fff?text=Drachin+Movie'">
+                        <img src="${thumb}" onerror="this.src='https://via.placeholder.com/640x360/333/fff?text=Drachin'" class="thumb-img" loading="lazy">
                         <div class="duration">HD</div>
                     </div>
                     <div class="vid-info">
-                        <div class="avatar"><div style="background:#555; width:100%; height:100%;"></div></div>
+                        <div class="avatar"><div style="background:#444; width:100%; height:100%;"></div></div>
                         <div class="meta-text">
-                            <div class="vid-title">${vid.judul}</div>
+                            <div class="vid-title">${v.title}</div>
                             <div class="vid-chan">Drachin Official</div>
                         </div>
                     </div>
@@ -227,57 +250,48 @@
             gridTarget.innerHTML = html;
         }
 
-        // === TAMPILAN PLAYER ===
-        function bukaPlayer(idRaw, videos) {
+        function renderPlayer(idRaw, videos) {
+            galleryView.style.display = 'none';
             playerView.style.display = 'block';
             
             const id = decodeURIComponent(idRaw);
+            const data = videos.find(v => v.id === id);
+            const title = data ? data.title : "Nonton Video";
             
-            // Cari Judul Video
-            const dataVideo = videos.find(v => v.id === id);
-            const judul = dataVideo ? dataVideo.judul : "Menonton Video";
-            
-            vidTitle.innerText = judul;
-            document.title = judul;
+            vidTitle.innerText = title;
+            document.title = title;
 
-            // --- LOGIKA PEMUTAR VIDEO (YANG PENTING JALAN) ---
-            
-            // Reset dulu
-            dmPlayer.style.display = 'none';
-            dmPlayer.src = "";
-            webPlayer.style.display = 'none';
-            webPlayer.pause();
+            // Reset Player
+            dmPlayer.style.display = 'none'; dmPlayer.src = "";
+            webPlayer.style.display = 'none'; webPlayer.pause();
 
-            // Cek Tipe
+            // LOGIKA DETEKSI TIPE VIDEO
             if (id.startsWith('http')) {
-                // Tipe: Link Video Web (MP4 / M3U8)
-                console.log("Mode: Web Player");
+                // Jika Link HTTP (MP4)
                 webPlayer.style.display = 'block';
                 webPlayer.src = id;
                 webPlayer.play();
             } else {
-                // Tipe: Dailymotion (Default untuk semua ID pendek/panjang)
-                // Ini solusi paling aman untuk ID seperti x9pvhs8
-                console.log("Mode: Dailymotion Embed");
+                // Jika Dailymotion (Default)
                 dmPlayer.style.display = 'block';
-                // Gunakan Embed Dailymotion Standar
-                dmPlayer.src = `https://www.dailymotion.com/embed/video/${id}?autoplay=1&ui-logo=0&queue-enable=false`;
+                // Tambahkan 'fullscreen-enable' dan parameter mobile friendly
+                dmPlayer.src = `https://www.dailymotion.com/embed/video/${id}?autoplay=1&ui-logo=0&queue-enable=false&fullscreen=true`;
             }
 
-            // --- SIDEBAR REKOMENDASI ---
-            const rekomendasi = videos.filter(v => v.id !== id).slice(0, 8); // Ambil 8 video lain
+            // Render Sidebar
+            const others = videos.filter(v => v.id !== id).slice(0, 10);
             let sideHtml = '';
-            rekomendasi.forEach(vid => {
-                let thumb = `https://www.dailymotion.com/thumbnail/video/${vid.id}`;
-                if(vid.id.startsWith('http')) thumb = 'https://via.placeholder.com/640x360/222/fff?text=VIDEO';
-
+            others.forEach(v => {
+                let thumb = `https://www.dailymotion.com/thumbnail/video/${v.id}`;
+                if(v.id.startsWith('http')) thumb = 'https://via.placeholder.com/640x360/111/fff?text=VIDEO';
+                
                 sideHtml += `
-                <a href="?id=${encodeURIComponent(vid.id)}" style="display:flex; gap:10px; color:white;">
-                    <div style="width:140px; aspect-ratio:16/9; background:#222; border-radius:8px; overflow:hidden; flex-shrink:0;">
+                <a href="?id=${encodeURIComponent(v.id)}" style="display:flex; gap:10px; color:white; padding-bottom:10px;">
+                    <div style="width:130px; aspect-ratio:16/9; background:#222; border-radius:6px; overflow:hidden; flex-shrink:0;">
                         <img src="${thumb}" onerror="this.src='https://via.placeholder.com/640x360/333/fff?text=PLAY'" style="width:100%; height:100%; object-fit:cover;">
                     </div>
                     <div style="flex:1;">
-                        <div style="font-size:13px; font-weight:600; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${vid.judul}</div>
+                        <div style="font-size:13px; font-weight:600; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${v.title}</div>
                         <div style="font-size:11px; color:#aaa; margin-top:4px;">Drachin Official</div>
                     </div>
                 </a>`;
@@ -285,9 +299,7 @@
             sideGrid.innerHTML = sideHtml;
         }
 
-        // JALANKAN SAAT WEB DIBUKA
-        mulaiWeb();
-
+        init();
     </script>
     
     <script type="text/javascript">var _Hasync= _Hasync|| [];
@@ -299,6 +311,7 @@
     hs.src = ('//s10.histats.com/js15_as.js');
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
     })();</script>
+    <noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4654540&101" alt="web stats script" border="0"></a></noscript>
 
 </body>
 </html>
