@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="no-referrer" />
-  <title>Dracin</title>
+  <title>dramachino</title>
 
-  <meta property="og:title" content="Dracin - Trending Videos" />
-  <meta property="og:description" content="Watch trending clips" />
+  <meta property="og:title" content="dramachino - Trending" />
+  <meta property="og:description" content="Tap Play to start." />
   <meta property="og:type" content="website" />
 
   <style>
@@ -20,6 +20,8 @@
     body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
     a{color:inherit;text-decoration:none}
     .wrap{max-width:1200px;margin:0 auto;padding:16px}
+
+    /* Topbar */
     .topbar{
       position:sticky;top:0;z-index:50;background:rgba(11,13,18,.88);
       backdrop-filter: blur(10px);
@@ -39,13 +41,19 @@
       background:rgba(17,22,38,.6);padding:8px 10px;border-radius:999px;white-space:nowrap;
     }
 
+    /* HOME GRID: 4 video kesamping */
     .grid{
       display:grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
       gap:14px;
       padding:14px 0 40px;
+      grid-template-columns: repeat(2, minmax(0,1fr)); /* mobile default */
     }
-    @media(min-width:900px){ .grid{grid-template-columns: repeat(5, minmax(0,1fr));} }
+    @media(min-width:700px){
+      .grid{grid-template-columns: repeat(3, minmax(0,1fr));}
+    }
+    @media(min-width:1000px){
+      .grid{grid-template-columns: repeat(4, minmax(0,1fr));} /* 4 kesamping */
+    }
 
     .card{
       background:var(--panel2);
@@ -69,19 +77,64 @@
     .sub{margin-top:6px;font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}
     .tag{font-size:11px;padding:2px 7px;border-radius:999px;border:1px solid var(--border);color:#c8d2ff;background:rgba(11,108,255,.12)}
 
+    /* PLAYER (vidstream-like) */
     #playerPage{display:none;padding:16px 0 40px}
     .back{display:inline-flex;align-items:center;gap:8px;color:#9ec5ff;cursor:pointer;font-weight:700;margin:6px 0 14px}
-    .playerShell{width:100%;aspect-ratio:16/9;background:#000;border-radius:16px;overflow:hidden;border:1px solid var(--border);position:relative;box-shadow:0 12px 50px rgba(0,0,0,.55);}
+
+    .playerHeader{margin:6px 0 10px}
+    .playerHeader h2{margin:0;font-size:22px}
+    .playerHeader p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.45}
+
+    .playerShell{
+      width:100%;aspect-ratio:16/9;background:#000;border-radius:16px;overflow:hidden;
+      border:1px solid var(--border);position:relative;
+      box-shadow:0 12px 50px rgba(0,0,0,.55);
+    }
     .playerShell.vertical{aspect-ratio:9/16;max-width:420px;margin:0 auto}
     .playerShell iframe,.playerShell video{position:absolute;inset:0;width:100%;height:100%;border:0}
-    .ctaRow{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-    .cta{flex:1;min-width:160px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:linear-gradient(135deg, rgba(11,108,255,.95), rgba(0,212,255,.75));color:#fff;font-weight:900;cursor:pointer;text-align:center;}
-    .cta.secondary{background:rgba(17,22,38,.7);color:#dbe4ff;font-weight:800;}
-    .headline{margin:14px 0 0;font-size:18px;font-weight:900}
-    .desc{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
 
-    .adBlock{margin:16px 0;border:1px dashed #334;border-radius:12px;min-height:100px;display:flex;align-items:center;justify-content:center;background:rgba(17,22,38,.55);overflow:hidden;}
+    .btnRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .btn{
+      flex:1;min-width:160px;
+      padding:12px 14px;border-radius:12px;border:1px solid var(--border);
+      background:linear-gradient(135deg, rgba(11,108,255,.95), rgba(0,212,255,.75));
+      color:#fff;font-weight:900;cursor:pointer;text-align:center;
+      user-select:none;
+    }
+    .btn.secondary{
+      background:rgba(17,22,38,.7);
+      color:#dbe4ff;
+      font-weight:800;
+    }
+    .btn.wide{flex:1 1 100%}
+
+    .shareBox{
+      margin-top:14px;
+      background:rgba(17,22,38,.55);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+    }
+    .shareTitle{font-weight:900;margin:0 0 8px}
+    .shareRow{display:flex;gap:10px;flex-wrap:wrap}
+    .copyInput{
+      flex:1;min-width:220px;
+      padding:10px 12px;border-radius:12px;
+      border:1px solid var(--border);background:var(--panel);color:var(--text);
+      outline:none;
+    }
+
+    .adBlock{
+      margin:14px 0 0;
+      border:1px dashed #334;
+      border-radius:12px;
+      min-height:100px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(17,22,38,.55);
+      overflow:hidden;
+    }
     .adInner{width:100%;display:flex;align-items:center;justify-content:center;padding:10px}
+
     .footer{border-top:1px solid var(--border);padding:18px 0;color:#7380ad;font-size:12px;text-align:center}
   </style>
 </head>
@@ -91,7 +144,7 @@
   <div class="inner">
     <div class="logo">
       <span class="logo-badge"></span>
-      <span>Dracin</span>
+      <span>dramachino</span>
     </div>
     <div class="search">
       <input id="searchBox" placeholder="Search videos..." />
@@ -101,88 +154,120 @@
 </div>
 
 <div class="wrap">
+
+  <!-- HOME -->
   <div id="homePage">
-    <div class="adBlock"><div class="adInner">
-      <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
-<div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
-    </div></div>
-
     <div class="grid" id="grid"></div>
-
-    <div class="adBlock"><div class="adInner">
-      <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
-<div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
-    </div></div>
+    <div class="footer">© dramachino • Fast video pages on Cloudflare Pages</div>
   </div>
 
+  <!-- PLAYER -->
   <div id="playerPage">
     <div class="back" onclick="location.href=location.pathname">← Back</div>
+
+    <div class="playerHeader">
+      <h2>Video</h2>
+      <p>Tap Play to start. “Download” opens the same safe link.</p>
+    </div>
 
     <div id="shell" class="playerShell">
       <video id="mp4" controls playsinline></video>
       <iframe id="dmFrame" allow="autoplay; fullscreen" allowfullscreen></iframe>
     </div>
 
-    <div class="ctaRow">
-      <div class="cta" id="watchBtn">▶ Continue Watching</div>
-      <div class="cta secondary" id="openBtn">Open in new tab</div>
+    <!-- Native banner tepat di bawah video -->
+    <div class="adBlock"><div class="adInner">
+      <!-- NATIVE BANNER Anda (paste di sini) -->
+      <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
+      <div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
+    </div></div>
+
+    <div class="btnRow">
+      <div class="btn" id="playBtn">Play</div>
+      <div class="btn secondary" id="dlBtn">Download</div>
+      <div class="btn wide secondary" id="dlVideoBtn">Download Video</div>
+    </div>
+
+    <div class="shareBox">
+      <p class="shareTitle">Share this link</p>
+      <div class="shareRow">
+        <input id="shareLink" class="copyInput" readonly />
+        <div class="btn secondary" id="copyBtn" style="flex:0 0 auto">Copy link</div>
+      </div>
     </div>
 
     <div class="adBlock"><div class="adInner">
-      <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
-<div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
-    </div></div>
-
-    <div class="headline" id="vTitle">Now Playing</div>
-    <div class="desc" id="vDesc">Trending clip</div>
-
-    <div class="adBlock"><div class="adInner">
-      <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
-<div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
+      <div style="color:#98a2c7;font-size:12px">Sponsored</div>
     </div></div>
 
     <div id="histatsBox" style="margin-top:10px;opacity:.7;text-align:center"></div>
+
+    <div class="footer">© dramachino</div>
   </div>
 
-  <div class="footer">© Dracin • Fast video pages on Cloudflare Pages</div>
 </div>
 
-<!-- Adsterra Popunder -->
+<!-- POPUNDER Anda -->
 <script type="text/javascript" src="https://ridernoodleacerbity.com/c9/c0/46/c9c04611f8fb3b0b21da4b49fb98d3fa.js"></script>
 
 <script>
+/* ========= CONFIG ========= */
 const DIRECTLINK = "https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f";
-const LIST_FILE = "videos.txt";
+const LIST_FILE = "videos.txt"; // dm:ID|Title  OR  mp4:URL|Title|Thumb(optional)
 
+/* ========= ROUTING =========
+   /?dm=x9w28gu
+   /?mp4=https%3A%2F%2Fexample.com%2Fv.mp4
+*/
 const qs = new URLSearchParams(location.search);
 const dm = qs.get("dm");
 const mp4 = qs.get("mp4");
 
 const homePage = document.getElementById("homePage");
 const playerPage = document.getElementById("playerPage");
+
 const grid = document.getElementById("grid");
 const searchBox = document.getElementById("searchBox");
 
 const shell = document.getElementById("shell");
 const dmFrame = document.getElementById("dmFrame");
 const mp4El = document.getElementById("mp4");
-const vTitle = document.getElementById("vTitle");
-const vDesc = document.getElementById("vDesc");
-const watchBtn = document.getElementById("watchBtn");
-const openBtn = document.getElementById("openBtn");
+
+const shareLink = document.getElementById("shareLink");
+const copyBtn = document.getElementById("copyBtn");
+
+const playBtn = document.getElementById("playBtn");
+const dlBtn = document.getElementById("dlBtn");
+const dlVideoBtn = document.getElementById("dlVideoBtn");
 
 function setVertical(isVertical){
   if(isVertical) shell.classList.add("vertical");
   else shell.classList.remove("vertical");
 }
 function toSafe(s){ return (s || "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-function directClick(){ if(DIRECTLINK && DIRECTLINK.startsWith("http")) window.open(DIRECTLINK, "_blank"); }
+function fireDirect(){ if(DIRECTLINK && DIRECTLINK.startsWith("http")) window.open(DIRECTLINK, "_blank"); }
 function openInNewTab(url){ window.open(url, "_blank"); }
 
 function showPlayer(){
   homePage.style.display = "none";
   playerPage.style.display = "block";
+  shareLink.value = location.href;
 }
+
+copyBtn?.show;
+copyBtn?.addEventListener("click", async ()=>{
+  try{
+    await navigator.clipboard.writeText(shareLink.value);
+    copyBtn.textContent = "Copied";
+    setTimeout(()=>copyBtn.textContent="Copy link", 1200);
+  }catch(e){
+    // fallback
+    shareLink.select();
+    document.execCommand("copy");
+    copyBtn.textContent = "Copied";
+    setTimeout(()=>copyBtn.textContent="Copy link", 1200);
+  }
+});
 
 function initDm(dmId){
   showPlayer();
@@ -192,11 +277,10 @@ function initDm(dmId){
   const embed = `https://www.dailymotion.com/embed/video/${encodeURIComponent(dmId)}?autoplay=1&mute=0&queue-enable=false`;
   dmFrame.src = embed;
 
-  vTitle.textContent = "Dailymotion Video";
-  vDesc.textContent = dmId;
-
-  watchBtn.onclick = () => directClick();
-  openBtn.onclick  = () => openInNewTab(`https://www.dailymotion.com/video/${encodeURIComponent(dmId)}`);
+  // tombol-tombol “vidstream-like”
+  playBtn.onclick = ()=> fireDirect();
+  dlBtn.onclick = ()=> fireDirect();
+  dlVideoBtn.onclick = ()=> fireDirect();
 
   detectDmVertical(dmId);
 }
@@ -210,7 +294,6 @@ async function detectDmVertical(dmId){
     if(data && data.contents){
       const o = JSON.parse(data.contents);
       if(o.height && o.width) setVertical(o.height > o.width);
-      if(o.title) vTitle.textContent = o.title;
     }
   }catch(e){}
 }
@@ -222,15 +305,17 @@ function initMp4(url){
   mp4El.src = url;
   mp4El.play().catch(()=>{});
 
-  vTitle.textContent = "MP4 Video";
-  vDesc.textContent = "Direct source";
-
-  watchBtn.onclick = () => directClick();
-  openBtn.onclick  = () => openInNewTab(url);
-
+  playBtn.onclick = ()=> fireDirect();
+  dlBtn.onclick = ()=> fireDirect();
+  dlVideoBtn.onclick = ()=> openInNewTab(url); // MP4 bisa direct
   mp4El.onloadedmetadata = () => setVertical(mp4El.videoHeight > mp4El.videoWidth);
 }
 
+/* ========= HOME LIST =========
+videos.txt:
+  dm:ID|Title
+  mp4:URL|Title|ThumbURL(optional)
+*/
 let items = [];
 async function loadList(){
   const res = await fetch(LIST_FILE + "?t=" + Date.now());
@@ -250,6 +335,7 @@ async function loadList(){
       const url = raw.replace("mp4:","").trim();
       return { type:"mp4", url, title, thumb: thumb || "" };
     }
+    // fallback dm id
     return { type:"dm", id: raw, title, thumb:`https://www.dailymotion.com/thumbnail/video/${raw}` };
   });
 
@@ -258,12 +344,8 @@ async function loadList(){
 
 function render(list){
   grid.innerHTML = list.map(v=>{
-    const href = v.type === "dm"
-      ? `?dm=${encodeURIComponent(v.id)}`
-      : `?mp4=${encodeURIComponent(v.url)}`;
-
+    const href = v.type === "dm" ? `?dm=${encodeURIComponent(v.id)}` : `?mp4=${encodeURIComponent(v.url)}`;
     const badge = v.type === "dm" ? "DM" : "MP4";
-
     const thumbHTML = v.type === "dm"
       ? `<img loading="lazy" src="${v.thumb}" alt="">`
       : (v.thumb
@@ -272,7 +354,7 @@ function render(list){
         );
 
     return `
-      <a class="card" href="${href}" onclick="directClick()">
+      <a class="card" href="${href}">
         <div class="thumb">
           ${thumbHTML}
           <div class="play">
@@ -291,12 +373,13 @@ function render(list){
   }).join("");
 }
 
-searchBox.addEventListener("input", ()=>{
+searchBox?.addEventListener("input", ()=>{
   const q = searchBox.value.trim().toLowerCase();
   if(!q){ render(items); return; }
   render(items.filter(v => (v.title||"").toLowerCase().includes(q)));
 });
 
+/* ========= HISTATS ========= */
 function injectHistats(){
   const box = document.getElementById("histatsBox");
   if(!box) return;
@@ -318,6 +401,7 @@ function injectHistats(){
   box.appendChild(s);
 }
 
+/* ========= BOOT ========= */
 if(dm){
   initDm(dm);
   injectHistats();
