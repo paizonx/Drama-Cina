@@ -1,164 +1,112 @@
-<!DOCTYPE html>
-<html lang="id">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drachin - Gallery</title>
-    <style>
-        /* CSS Dark Mode Professional */
-        body { margin: 0; font-family: 'Roboto', sans-serif; background-color: #0f0f0f; color: white; }
-        
-        .navbar { 
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 0 20px; height: 60px; background: #0f0f0f; 
-            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #2a2a2a; 
-        }
-        .logo { font-size: 22px; font-weight: bold; color: white; text-decoration: none; display: flex; align-items: center; gap: 5px; }
-        .logo span { color: #ff0000; }
-        
-        .nav-buttons a {
-            text-decoration: none; color: white; font-size: 14px; font-weight: 500; margin-left: 15px;
-        }
-        .btn-vip {
-            background-color: #cc0000; padding: 8px 15px; border-radius: 4px; color: white;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Drachin - Watch</title>
+  <meta name="robots" content="noindex"> <link rel="stylesheet" href="/assets/styles.css" />
 
-        .container { padding: 20px; max-width: 1400px; margin: 0 auto; }
-        
-        /* Tempat Iklan */
-        .ad-banner { 
-            background: #1a1a1a; padding: 10px; border-radius: 8px; 
-            margin-bottom: 25px; text-align: center; min-height: 100px;
-        }
+  <style>
+    .hidden { display: none !important; }
+    .player-card { background: #000; min-height: 300px; display: flex; flex-direction: column; justify-content: center; }
+    iframe { width: 100%; aspect-ratio: 16/9; }
+    video { width: 100%; aspect-ratio: 16/9; }
+  </style>
 
-        .video-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 20px; row-gap: 30px;
-        }
-
-        .video-card { cursor: pointer; transition: 0.2s; }
-        .video-card:hover { transform: scale(1.02); }
-        
-        .thumb-box {
-            position: relative; width: 100%; aspect-ratio: 16/9; 
-            background: #222; border-radius: 10px; overflow: hidden;
-        }
-        .thumb-box img { width: 100%; height: 100%; object-fit: cover; }
-        .duration {
-            position: absolute; bottom: 8px; right: 8px; 
-            background: rgba(0,0,0,0.8); padding: 2px 6px; 
-            border-radius: 4px; font-size: 11px;
-        }
-
-        .info { margin-top: 10px; display: flex; gap: 10px; }
-        .avatar { width: 36px; height: 36px; background: #444; border-radius: 50%; flex-shrink: 0; }
-        .text-info { display: flex; flex-direction: column; }
-        .title { 
-            font-size: 15px; font-weight: 600; line-height: 1.3; margin-bottom: 4px; color: #eee;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-        }
-        .meta { font-size: 13px; color: #aaa; }
-    </style>
-
-    <script type="text/javascript" src="https://ridernoodleacerbity.com/c9/c0/46/c9c04611f8fb3b0b21da4b49fb98d3fa.js"></script>
+  <script type="text/javascript" src="https://ridernoodleacerbity.com/c9/c0/46/c9c04611f8fb3b0b21da4b49fb98d3fa.js"></script>
 </head>
 <body>
-
-    <nav class="navbar">
-        <a href="#" class="logo"><span>▶</span> Drachin</a>
-        <div class="nav-buttons">
-            <a href="https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f" target="_blank">Upload</a>
-            <a href="https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f" target="_blank" class="btn-vip">Premium App</a>
-        </div>
-    </nav>
-
-    <div class="container">
-        <div class="ad-banner">
-            <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
-            <div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
-        </div>
-
-        <div class="video-grid" id="mainGrid">
-            <p style="color:#aaa; text-align:center; grid-column:1/-1;">Loading videos...</p>
-        </div>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand__dot"></span>
+      <a href="/" style="color:white; text-decoration:none;"><span class="brand__text">Drachin</span></a>
     </div>
+    <nav class="nav">
+      <a class="nav__link" href="/">Home</a>
+    </nav>
+  </header>
 
-    <script>
-        // URL file database txt
-        const DATABASE_URL = 'videos.txt';
+  <main class="page">
+    <section class="player-wrap">
+      <div class="player-card">
+        <div class="player">
+          
+          <div id="dailymotionWrap" class="embed hidden">
+            <iframe id="dmFrame" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          </div>
 
-        async function loadVideos() {
-            try {
-                // 1. Ambil data dari videos.txt
-                const response = await fetch(DATABASE_URL + '?t=' + new Date().getTime()); // tambah timestamp agar tidak cache
-                if (!response.ok) throw new Error('Gagal memuat database');
-                const text = await response.text();
+          <div id="mp4Wrap" class="mp4 hidden">
+            <video id="mp4Video" controls autoplay playsinline preload="metadata" style="width:100%;"></video>
+          </div>
 
-                // 2. Bersihkan Grid
-                const grid = document.getElementById('mainGrid');
-                grid.innerHTML = '';
+          <div id="emptyState" class="empty hidden" style="text-align:center; color:white; padding:20px;">
+            <div class="empty__title">Video Not Found</div>
+            <div class="empty__hint">Please select a video from the <a href="/" style="color:#ff0000;">Home Page</a>.</div>
+          </div>
 
-                // 3. Proses setiap baris
-                const lines = text.split('\n');
-                
-                lines.forEach(line => {
-                    const parts = line.split('|');
-                    // Pastikan ada ID dan Judul (minimal 2 bagian)
-                    if (parts.length < 2) return;
+        </div>
 
-                    const id = parts[0].trim();
-                    const title = parts[1].trim();
-                    if (!id) return;
+        <div class="actions">
+          <a id="downloadBtn" class="btn btn-primary" href="https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f" rel="nofollow noopener" target="_blank">
+            Download Video HD
+          </a>
+        </div>
+      </div>
+    </section>
 
-                    // LOGIKA PINTAR:
-                    // Jika ID dimulai dengan 'http', berarti link luar (?src=)
-                    // Jika tidak, berarti ID Dailymotion (?id=)
-                    let watchLink, thumbUrl;
-                    
-                    if (id.startsWith('http')) {
-                        watchLink = `watch.html?src=${encodeURIComponent(id)}`;
-                        thumbUrl = 'https://via.placeholder.com/640x360/222/fff?text=MOVIE'; // Default thumb untuk link luar
-                    } else {
-                        watchLink = `watch.html?id=${id}`;
-                        // Coba tebak thumbnail Dailymotion
-                        thumbUrl = `https://www.dailymotion.com/thumbnail/video/${id}`;
-                    }
-                    
-                    // Backup image jika thumbnail error
-                    const errorImg = "this.src='https://via.placeholder.com/640x360/111/fff?text=VIDEO'";
+    <aside class="sidebar">
+      <div class="side-card">
+        <div class="side-title">Sponsored</div>
+        <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
+        <div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
+      </div>
+    </aside>
+  </main>
 
-                    // Buat HTML Kartu
-                    const card = document.createElement('div');
-                    card.className = 'video-card';
-                    card.onclick = () => window.location.href = watchLink;
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. Ambil Parameter dari URL (?id=... atau ?src=...)
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');   // Contoh: x9pvhs8
+        const src = params.get('src'); // Contoh: https://website.com/video.mp4
+        
+        // 2. Ambil Elemen Player
+        const dmWrap = document.getElementById('dailymotionWrap');
+        const dmFrame = document.getElementById('dmFrame');
+        const mp4Wrap = document.getElementById('mp4Wrap');
+        const mp4Video = document.getElementById('mp4Video');
+        const emptyState = document.getElementById('emptyState');
 
-                    card.innerHTML = `
-                        <div class="thumb-box">
-                            <img src="${thumbUrl}" onerror="${errorImg}" alt="${title}" loading="lazy">
-                            <div class="duration">HD</div>
-                        </div>
-                        <div class="info">
-                            <div class="avatar"></div>
-                            <div class="text-info">
-                                <div class="title">${title}</div>
-                                <div class="meta">
-                                    Drachin Official • ${Math.floor(Math.random() * 500) + 10}K views
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-
-            } catch (error) {
-                console.error(error);
-                document.getElementById('mainGrid').innerHTML = '<p style="text-align:center; width:100%;">Gagal memuat daftar video. Pastikan file videos.txt ada.</p>';
-            }
+        // 3. Logika Pemutaran
+        if (id) {
+            // Jika ada ID, berarti Dailymotion
+            console.log("Memutar Dailymotion ID:", id);
+            dmWrap.classList.remove('hidden');
+            // Masukkan link embed Dailymotion
+            dmFrame.src = "https://www.dailymotion.com/embed/video/" + id + "?autoplay=1&ui-logo=0";
+            
+        } else if (src) {
+            // Jika ada SRC, berarti MP4 biasa
+            console.log("Memutar MP4 Source:", src);
+            mp4Wrap.classList.remove('hidden');
+            mp4Video.src = src;
+            
+        } else {
+            // Jika tidak ada apa-apa
+            emptyState.classList.remove('hidden');
         }
+    });
+  </script>
 
-        // Jalankan fungsi saat web dibuka
-        loadVideos();
-    </script>
+  <script type="text/javascript">var _Hasync= _Hasync|| [];
+  _Hasync.push(['Histats.start', '1,4654540,4,0,0,0,00010000']);
+  _Hasync.push(['Histats.fasi', '1']);
+  _Hasync.push(['Histats.track_hits', '']);
+  (function() {
+  var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+  hs.src = ('//s10.histats.com/js15_as.js');
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+  })();</script>
+  <noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4654540&101" alt="web stats script" border="0"></a></noscript>
 </body>
 </html>
