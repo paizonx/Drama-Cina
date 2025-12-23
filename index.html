@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Dracin</title>
+
+  <meta property="og:title" content="Dracin - Trending Videos" />
+  <meta property="og:description" content="Watch trending clips" />
+  <meta property="og:type" content="website" />
+
+  <style>
+    :root{
+      --bg:#0b0d12; --panel:#111626; --panel2:#0f1424;
+      --text:#eef2ff; --muted:#a7b0d6; --border:#1d2746;
+      --accent:#0b6cff; --accent2:#00d4ff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1200px;margin:0 auto;padding:16px}
+    .topbar{
+      position:sticky;top:0;z-index:50;background:rgba(11,13,18,.88);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--border);
+    }
+    .topbar .inner{max-width:1200px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.3px}
+    .logo-badge{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:inline-block;}
+    .search{flex:1;display:flex;align-items:center;gap:10px}
+    .search input{
+      width:100%;padding:11px 12px;border-radius:12px;
+      border:1px solid var(--border);background:var(--panel);color:var(--text);
+      outline:none;
+    }
+    .pill{
+      font-size:12px;color:var(--muted);border:1px solid var(--border);
+      background:rgba(17,22,38,.6);padding:8px 10px;border-radius:999px;white-space:nowrap;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap:14px;
+      padding:14px 0 40px;
+    }
+    @media(min-width:900px){ .grid{grid-template-columns: repeat(5, minmax(0,1fr));} }
+
+    .card{
+      background:var(--panel2);
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      cursor:pointer;
+      transition:transform .15s ease, border-color .15s ease;
+      display:flex;flex-direction:column;
+      position:relative;
+    }
+    .card:hover{transform:translateY(-3px);border-color:#2a3c74}
+    .thumb{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden;}
+    .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+    .dur{position:absolute;right:8px;bottom:8px;font-size:11px;color:#fff;background:rgba(0,0,0,.6);padding:3px 6px;border-radius:8px;}
+    .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+    .play .btn{width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;}
+    .play svg{width:22px;height:22px;fill:#fff;margin-left:2px}
+    .meta{padding:10px 10px 12px}
+    .title{font-size:13px;line-height:1.35;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .sub{margin-top:6px;font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}
+    .tag{font-size:11px;padding:2px 7px;border-radius:999px;border:1px solid var(--border);color:#c8d2ff;background:rgba(11,108,255,.12)}
+
+    #playerPage{display:none;padding:16px 0 40px}
+    .back{display:inline-flex;align-items:center;gap:8px;color:#9ec5ff;cursor:pointer;font-weight:700;margin:6px 0 14px}
+    .playerShell{width:100%;aspect-ratio:16/9;background:#000;border-radius:16px;overflow:hidden;border:1px solid var(--border);position:relative;box-shadow:0 12px 50px rgba(0,0,0,.55);}
+    .playerShell.vertical{aspect-ratio:9/16;max-width:420px;margin:0 auto}
+    .playerShell iframe,.playerShell video{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .ctaRow{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+    .cta{flex:1;min-width:160px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:linear-gradient(135deg, rgba(11,108,255,.95), rgba(0,212,255,.75));color:#fff;font-weight:900;cursor:pointer;text-align:center;}
+    .cta.secondary{background:rgba(17,22,38,.7);color:#dbe4ff;font-weight:800;}
+    .headline{margin:14px 0 0;font-size:18px;font-weight:900}
+    .desc{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+
+    .adBlock{margin:16px 0;border:1px dashed #334;border-radius:12px;min-height:100px;display:flex;align-items:center;justify-content:center;background:rgba(17,22,38,.55);overflow:hidden;}
+    .adInner{width:100%;display:flex;align-items:center;justify-content:center;padding:10px}
+    .footer{border-top:1px solid var(--border);padding:18px 0;color:#7380ad;font-size:12px;text-align:center}
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="inner">
+    <div class="logo">
+      <span class="logo-badge"></span>
+      <span>Dracin</span>
+    </div>
+    <div class="search">
+      <input id="searchBox" placeholder="Search videos..." />
+    </div>
+    <div class="pill">USA Target</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="homePage">
+    <div class="adBlock"><div class="adInner">
+      <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
+<div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
+    </div></div>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="adBlock"><div class="adInner">
+      <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
+<div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
+    </div></div>
+  </div>
+
+  <div id="playerPage">
+    <div class="back" onclick="location.href=location.pathname">← Back</div>
+
+    <div id="shell" class="playerShell">
+      <video id="mp4" controls playsinline></video>
+      <iframe id="dmFrame" allow="autoplay; fullscreen" allowfullscreen></iframe>
+    </div>
+
+    <div class="ctaRow">
+      <div class="cta" id="watchBtn">▶ Continue Watching</div>
+      <div class="cta secondary" id="openBtn">Open in new tab</div>
+    </div>
+
+    <div class="adBlock"><div class="adInner">
+      <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
+<div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
+    </div></div>
+
+    <div class="headline" id="vTitle">Now Playing</div>
+    <div class="desc" id="vDesc">Trending clip</div>
+
+    <div class="adBlock"><div class="adInner">
+      <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
+<div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
+    </div></div>
+
+    <div id="histatsBox" style="margin-top:10px;opacity:.7;text-align:center"></div>
+  </div>
+
+  <div class="footer">© Dracin • Fast video pages on Cloudflare Pages</div>
+</div>
+
+<!-- Adsterra Popunder -->
+<script type="text/javascript" src="https://ridernoodleacerbity.com/c9/c0/46/c9c04611f8fb3b0b21da4b49fb98d3fa.js"></script>
+
+<script>
+const DIRECTLINK = "https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f";
+const LIST_FILE = "videos.txt";
+
+const qs = new URLSearchParams(location.search);
+const dm = qs.get("dm");
+const mp4 = qs.get("mp4");
+
+const homePage = document.getElementById("homePage");
+const playerPage = document.getElementById("playerPage");
+const grid = document.getElementById("grid");
+const searchBox = document.getElementById("searchBox");
+
+const shell = document.getElementById("shell");
+const dmFrame = document.getElementById("dmFrame");
+const mp4El = document.getElementById("mp4");
+const vTitle = document.getElementById("vTitle");
+const vDesc = document.getElementById("vDesc");
+const watchBtn = document.getElementById("watchBtn");
+const openBtn = document.getElementById("openBtn");
+
+function setVertical(isVertical){
+  if(isVertical) shell.classList.add("vertical");
+  else shell.classList.remove("vertical");
+}
+function toSafe(s){ return (s || "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function directClick(){ if(DIRECTLINK && DIRECTLINK.startsWith("http")) window.open(DIRECTLINK, "_blank"); }
+function openInNewTab(url){ window.open(url, "_blank"); }
+
+function showPlayer(){
+  homePage.style.display = "none";
+  playerPage.style.display = "block";
+}
+
+function initDm(dmId){
+  showPlayer();
+  mp4El.style.display = "none";
+  dmFrame.style.display = "block";
+
+  const embed = `https://www.dailymotion.com/embed/video/${encodeURIComponent(dmId)}?autoplay=1&mute=0&queue-enable=false`;
+  dmFrame.src = embed;
+
+  vTitle.textContent = "Dailymotion Video";
+  vDesc.textContent = dmId;
+
+  watchBtn.onclick = () => directClick();
+  openBtn.onclick  = () => openInNewTab(`https://www.dailymotion.com/video/${encodeURIComponent(dmId)}`);
+
+  detectDmVertical(dmId);
+}
+
+async function detectDmVertical(dmId){
+  try{
+    const dmUrl = `https://www.dailymotion.com/services/oembed?url=https://www.dailymotion.com/video/${dmId}`;
+    const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(dmUrl)}`;
+    const res = await fetch(proxy);
+    const data = await res.json();
+    if(data && data.contents){
+      const o = JSON.parse(data.contents);
+      if(o.height && o.width) setVertical(o.height > o.width);
+      if(o.title) vTitle.textContent = o.title;
+    }
+  }catch(e){}
+}
+
+function initMp4(url){
+  showPlayer();
+  dmFrame.style.display = "none";
+  mp4El.style.display = "block";
+  mp4El.src = url;
+  mp4El.play().catch(()=>{});
+
+  vTitle.textContent = "MP4 Video";
+  vDesc.textContent = "Direct source";
+
+  watchBtn.onclick = () => directClick();
+  openBtn.onclick  = () => openInNewTab(url);
+
+  mp4El.onloadedmetadata = () => setVertical(mp4El.videoHeight > mp4El.videoWidth);
+}
+
+let items = [];
+async function loadList(){
+  const res = await fetch(LIST_FILE + "?t=" + Date.now());
+  const text = await res.text();
+
+  items = text.split("\n").map(l=>l.trim()).filter(Boolean).map(line=>{
+    const parts = line.split("|");
+    const raw = (parts[0]||"").trim();
+    const title = (parts[1]||"Trending Video").trim();
+    const thumb = (parts[2]||"").trim();
+
+    if(raw.startsWith("dm:")){
+      const id = raw.replace("dm:","").trim();
+      return { type:"dm", id, title, thumb:`https://www.dailymotion.com/thumbnail/video/${id}` };
+    }
+    if(raw.startsWith("mp4:")){
+      const url = raw.replace("mp4:","").trim();
+      return { type:"mp4", url, title, thumb: thumb || "" };
+    }
+    return { type:"dm", id: raw, title, thumb:`https://www.dailymotion.com/thumbnail/video/${raw}` };
+  });
+
+  render(items);
+}
+
+function render(list){
+  grid.innerHTML = list.map(v=>{
+    const href = v.type === "dm"
+      ? `?dm=${encodeURIComponent(v.id)}`
+      : `?mp4=${encodeURIComponent(v.url)}`;
+
+    const badge = v.type === "dm" ? "DM" : "MP4";
+
+    const thumbHTML = v.type === "dm"
+      ? `<img loading="lazy" src="${v.thumb}" alt="">`
+      : (v.thumb
+          ? `<img loading="lazy" src="${v.thumb}" alt="">`
+          : `<img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect width='100%25' height='100%25' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%2399a' font-size='28'%3EMP4%3C/text%3E%3C/svg%3E" alt="">`
+        );
+
+    return `
+      <a class="card" href="${href}" onclick="directClick()">
+        <div class="thumb">
+          ${thumbHTML}
+          <div class="play">
+            <div class="btn">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="dur">${badge}</div>
+        </div>
+        <div class="meta">
+          <div class="title">${toSafe(v.title)}</div>
+          <div class="sub"><span class="tag">${badge}</span><span>Trending</span></div>
+        </div>
+      </a>
+    `;
+  }).join("");
+}
+
+searchBox.addEventListener("input", ()=>{
+  const q = searchBox.value.trim().toLowerCase();
+  if(!q){ render(items); return; }
+  render(items.filter(v => (v.title||"").toLowerCase().includes(q)));
+});
+
+function injectHistats(){
+  const box = document.getElementById("histatsBox");
+  if(!box) return;
+
+  const s = document.createElement("script");
+  s.type = "text/javascript";
+  s.async = true;
+  s.text = `
+    var _Hasync= _Hasync|| [];
+    _Hasync.push(['Histats.start', '1,4654540,4,0,0,0,00010000']);
+    _Hasync.push(['Histats.fasi', '1']);
+    _Hasync.push(['Histats.track_hits', '']);
+    (function() {
+      var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+      hs.src = ('//s10.histats.com/js15_as.js');
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+    })();
+  `;
+  box.appendChild(s);
+}
+
+if(dm){
+  initDm(dm);
+  injectHistats();
+} else if(mp4){
+  initMp4(decodeURIComponent(mp4));
+  injectHistats();
+} else {
+  loadList();
+}
+</script>
+
+</body>
+</html>
