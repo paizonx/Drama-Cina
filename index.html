@@ -1,271 +1,226 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Drachin - Nonton Stream</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
-/* --- CSS ALA VIDSTREAM PRO (RESPONSIF BAGUS) --- */
-:root { --bg-main: #060b14; --bg-card: #131b2e; --accent: #e62117; --text-main: #ffffff; --text-muted: #94a3b8; --border: #1e293b; }
-body { margin: 0; background-color: var(--bg-main); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; }
-a { text-decoration: none; color: inherit; }
-*{ box-sizing: border-box; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Drachin - Nonton & Download Drama</title>
+    <meta name="description" content="Nonton dan download drama asia subtitle indonesia gratis.">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* === TEMA YOUTUBE DARK MODE === */
+        :root { --bg-main: #0f0f0f; --bg-sec: #272727; --text-main: #fff; --text-sec: #aaa; --red: #ff0000; }
+        body { margin: 0; font-family: 'Roboto', sans-serif; background-color: var(--bg-main); color: var(--text-main); -webkit-tap-highlight-color: transparent; }
+        a { text-decoration: none; color: inherit; }
+        * { box-sizing: border-box; }
 
-/* LAYOUT UTAMA */
-.container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
+        /* NAVBAR STICKY */
+        .navbar { display: flex; align-items: center; justify-content: space-between; padding: 0 15px; height: 56px; background: rgba(15,15,15,0.98); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #333; backdrop-filter: blur(10px); }
+        .brand { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 5px; letter-spacing: -0.5px; }
+        .brand span { color: var(--red); font-size: 26px; }
+        .nav-link { font-size: 14px; font-weight: 600; margin-left: 15px; cursor: pointer; color: var(--text-main); }
+        .btn-vip { background: var(--red); padding: 8px 16px; border-radius: 24px; color: white; }
 
-/* NAVBAR */
-.navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
-.brand { font-weight: 800; font-size: 22px; color: #fff; display: flex; align-items: center; gap: 5px; }
-.brand span { color: var(--accent); }
-.nav-btn { background: #333; padding: 8px 15px; border-radius: 20px; font-size: 13px; font-weight: 600; }
-.nav-vip { background: var(--accent); color: white; }
+        /* CONTAINER */
+        .main-wrapper { max-width: 1280px; margin: 0 auto; padding: 0 15px 40px 15px; min-height: 90vh; }
+        @media(max-width: 600px) { .main-wrapper { padding: 0 0 40px 0; } } /* Full width di HP */
 
-/* TEMPAT IKLAN NATIVE (WADAH KHUSUS) */
-.ad-native-box { 
-    background: #0f1623; 
-    border: 1px dashed #333; 
-    border-radius: 8px; 
-    margin: 20px 0; 
-    padding: 10px; 
-    min-height: 120px; /* Tinggi minimum agar iklan punya tempat muncul */
-    display: flex; align-items: center; justify-content: center; text-align: center;
-}
+        /* LOADER */
+        #loaderPage { position: fixed; inset: 0; background: var(--bg-main); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; }
+        .spinner { border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--red); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-/* GRID GALERI */
-.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding-bottom: 50px; }
-@media(min-width: 600px){ .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); } }
+        /* IKLAN NATIVE BOX (Agar Rapi) */
+        .ad-native-container { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 10px; margin: 20px 0; text-align: center; overflow: hidden; min-height: 100px; display: flex; align-items: center; justify-content: center; }
+        .ad-label { font-size: 11px; color: #555; margin-bottom: 5px; display: block; text-align: left; }
 
-/* CARD VIDEO */
-.vid-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
-.thumb-area { width: 100%; aspect-ratio: 16/9; background-color: #000; position: relative; overflow: hidden; }
-.thumb-img { width: 100%; height: 100%; object-fit: cover; }
-.duration { position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; }
-.card-info { padding: 10px; }
-.vid-title { font-size: 13px; font-weight: 600; margin: 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: #eee; }
+        /* === HALAMAN GALERI === */
+        #galleryView { display: none; padding-top: 20px; }
+        @media(max-width: 600px) { #galleryView { padding: 20px 15px; } }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; row-gap: 25px; }
+        @media(min-width: 768px) { .grid-container { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; } }
 
-/* PLAYER PAGE */
-#playerPage { display: none; }
-.back-btn { display: inline-block; padding: 10px 0; color: var(--text-muted); cursor: pointer; font-size: 14px; }
+        .video-item { cursor: pointer; display: flex; flex-direction: column; group: hover; transition: transform 0.2s; }
+        .video-item:hover { transform: scale(1.02); }
+        .thumb-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; background: #222; border-radius: 10px; overflow: hidden; }
+        .thumb-img { width: 100%; height: 100%; object-fit: cover; }
+        .time-badge { position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.8); color: #fff; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+        
+        .item-details { margin-top: 10px; display: flex; gap: 12px; }
+        .channel-icon { width: 36px; height: 36px; border-radius: 50%; background: #333; flex-shrink: 0; }
+        .item-text { display: flex; flex-direction: column; }
+        .item-title { font-size: 15px; font-weight: 600; line-height: 1.3; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: #f1f1f1; }
+        .item-meta { font-size: 13px; color: var(--text-sec); }
 
-/* FRAME PLAYER YANG MENYESUAIKAN HP */
-.player-wrapper {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%; /* Kunci agar Rasio 16:9 di semua layar */
-    background: #000;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    margin-bottom: 20px;
-}
-.player-wrapper iframe, .player-wrapper video {
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 100%; border: 0;
-}
+        /* === HALAMAN PLAYER === */
+        #playerView { display: none; }
+        .back-header { display: flex; align-items: center; padding: 15px; color: var(--text-sec); font-weight: 600; cursor: pointer; border-bottom: 1px solid #222; }
+        
+        .player-container { 
+            position: relative; width: 100%; background: #000; 
+            padding-bottom: 56.25%; /* KUNCI RESPONSIF 16:9 */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+        @media(min-width: 900px) { .player-container { border-radius: 12px; margin-top: 20px; } }
 
-/* TOMBOL AKSI (CUAN) */
-.action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-.btn-act { border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; }
-.btn-dl { background: #fff; color: #000; width: 100%; } /* Direct Link Utama */
-.btn-share { background: #1e293b; color: #fff; }
+        .player-container iframe, .player-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-/* REKOMENDASI (SIDEBAR) */
-.rec-title { font-size: 16px; margin-bottom: 15px; border-left: 4px solid var(--accent); padding-left: 10px; }
-.rec-list { display: flex; flex-direction: column; gap: 15px; }
-.rec-item { display: flex; gap: 10px; align-items: flex-start; }
-.rec-thumb { width: 120px; aspect-ratio: 16/9; background: #222; border-radius: 6px; overflow: hidden; flex-shrink: 0; }
-.rec-info { font-size: 13px; font-weight: 600; line-height: 1.3; }
+        .watch-content { padding: 20px 15px; max-width: 900px; margin: 0 auto; }
+        .video-main-title { font-size: 20px; font-weight: 700; line-height: 1.4; margin-bottom: 15px; }
 
-#loader { text-align: center; padding: 50px; color: #666; }
-</style>
+        /* TOMBOL AKSI (CUAN AREA) */
+        .action-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 20px; }
+        .act-btn { 
+            display: flex; align-items: center; gap: 8px;
+            background: var(--bg-sec); color: var(--text-main); 
+            border: none; padding: 10px 20px; border-radius: 30px; 
+            font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer;
+        }
+        /* Tombol Download Paling Menonjol */
+        .btn-download { background: #fff; color: #000; font-weight: 700; }
+        .btn-download:hover { background: #eee; }
 
-<script type="text/javascript" src="https://ridernoodleacerbity.com/c9/c0/46/c9c04611f8fb3b0b21da4b49fb98d3fa.js"></script>
+        /* CHANNEL INFO */
+        .channel-box { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-top: 1px solid #333; border-bottom: 1px solid #333; margin-bottom: 20px; }
+        .sub-btn { margin-left: auto; background: var(--red); color: white; font-weight: 600; padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; }
 
+        /* REKOMENDASI */
+        .rec-list { display: flex; flex-direction: column; gap: 15px; }
+        .rec-item { display: flex; gap: 10px; }
+        .rec-thumb { width: 140px; aspect-ratio: 16/9; background: #222; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+        .rec-title { font-size: 14px; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+
+    <script type="text/javascript" src="https://ridernoodleacerbity.com/c9/c0/46/c9c04611f8fb3b0b21da4b49fb98d3fa.js"></script>
 </head>
 <body>
 
-<div class="container">
-    
-    <div class="navbar">
+    <nav class="navbar">
         <a href="?" class="brand"><span>▶</span> Drachin</a>
-        <div style="display:flex; gap:10px;">
-            <a href="https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f" target="_blank" class="nav-btn">Upload</a>
-            <a href="https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f" target="_blank" class="nav-btn nav-vip">APP</a>
+        <div style="display:flex; align-items:center;">
+            <a href="https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f" target="_blank" class="nav-link">Upload</a>
+            <a href="https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f" target="_blank" class="nav-link btn-vip">Get App</a>
         </div>
+    </nav>
+
+    <div id="loaderPage">
+        <div class="spinner"></div>
+        <div style="font-weight:600;">Memuat Video...</div>
     </div>
 
-    <div id="loader">Memuat Video...</div>
+    <div class="main-wrapper">
 
-    <div id="galleryPage" style="display:none;">
-        
-        <div class="ad-native-box">
-            <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
-            <div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
-        </div>
-
-        <h2 style="margin-bottom:20px; font-size:18px;">Video Terbaru</h2>
-        <div class="gallery-grid" id="gridTarget"></div>
-    </div>
-
-    <div id="playerPage">
-        <div onclick="window.location.href='?'" class="back-btn">← Kembali ke Galeri</div>
-
-        <div class="player-wrapper">
-            <iframe id="dmPlayer" allow="autoplay; fullscreen" allowfullscreen style="display:none;"></iframe>
-            <video id="webPlayer" controls playsinline style="display:none;"></video>
-        </div>
-
-        <h1 id="vidTitle" style="font-size:18px; margin-bottom:15px; line-height:1.4;">Judul Video</h1>
-
-        <div class="action-buttons">
-            <button class="btn-act btn-dl" onclick="window.open('https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f', '_blank')">
-                ⬇ DOWNLOAD HD
-            </button>
-            <button class="btn-act btn-share">Share</button>
-        </div>
-
-        <div class="ad-native-box">
-            <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
-            <div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
-        </div>
-
-        <div class="rec-title">Rekomendasi</div>
-        <div class="rec-list" id="recList"></div>
-
-        <div style="height:50px;"></div> </div>
-
-</div>
-
-<script>
-    const DATABASE = "videos.txt"; 
-
-    // UI ELEMENTS
-    const loader = document.getElementById('loader');
-    const galleryPage = document.getElementById('galleryPage');
-    const playerPage = document.getElementById('playerPage');
-    const gridTarget = document.getElementById('gridTarget');
-    const recList = document.getElementById('recList');
-    
-    const dmPlayer = document.getElementById('dmPlayer');
-    const webPlayer = document.getElementById('webPlayer');
-    const vidTitle = document.getElementById('vidTitle');
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const currentId = urlParams.get('id');
-
-    async function init() {
-        try {
-            // Ambil data videos.txt
-            const res = await fetch(DATABASE + '?t=' + Date.now());
-            if (!res.ok) throw new Error("Gagal load videos.txt");
-            const text = await res.text();
+        <div id="galleryView">
+            <span class="ad-label">SPONSORED</span>
+            <div class="ad-native-container">
+                <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
+                <div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
+            </div>
             
-            const videos = text.split('\n')
-                .filter(l => l.includes('|'))
-                .map(l => {
-                    const p = l.split('|');
-                    return { id: p[0].trim(), title: p[1].trim() };
-                });
+            <h3 style="margin: 10px 0 20px 0;">Video Terbaru</h3>
+            <div class="grid-container" id="gridTarget"></div>
+        </div>
 
-            if (videos.length === 0) throw new Error("Video kosong");
+        <div id="playerView">
+            <div onclick="window.location.href='?'" class="back-header">
+                <svg height="24" viewBox="0 0 24 24" width="24" focusable="false" style="fill:var(--text-sec); margin-right:10px;"><path d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z"></path></svg>
+                Kembali ke Galeri
+            </div>
 
-            loader.style.display = 'none';
+            <div class="player-container">
+                <iframe id="dmPlayer" allow="autoplay; fullscreen" allowfullscreen style="display:none;"></iframe>
+                <video id="webPlayer" controls playsinline style="display:none;"></video>
+            </div>
 
-            if (currentId) {
-                renderPlayer(currentId, videos);
-            } else {
-                renderGallery(videos);
+            <div class="watch-content">
+                <h1 id="vidTitle" class="video-main-title">...</h1>
+
+                <div class="action-bar">
+                    <button class="act-btn btn-download" onclick="window.open('https://ridernoodleacerbity.com/pu4v8n14t?key=280fea026bf240b90dd4b3343468c40f', '_blank')">
+                        <svg height="24" viewBox="0 0 24 24" width="24" focusable="false" style="fill:#000;"><path d="M17 18v1H6v-1h11zm-.5-6.6-.7-.7-3.8 3.7V4h-1v10.4l-3.8-3.8-.7.7 5 5 5-4.9z"></path></svg>
+                        Download HD
+                    </button>
+                    <button class="act-btn">
+                        <svg height="24" viewBox="0 0 24 24" width="24" focusable="false" style="fill:var(--text-main);"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"></path></svg>
+                        Like
+                    </button>
+                    <button class="act-btn">
+                        <svg height="24" viewBox="0 0 24 24" width="24" focusable="false" style="fill:var(--text-main);"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"></path></svg>
+                        Share
+                    </button>
+                </div>
+
+                <span class="ad-label">ADVERTISEMENT</span>
+                <div class="ad-native-container">
+                    <script async="async" data-cfasync="false" src="https://ridernoodleacerbity.com/8754c34f20e587c8ef08a064d9f71e59/invoke.js"></script>
+                    <div id="container-8754c34f20e587c8ef08a064d9f71e59"></div>
+                </div>
+
+                <div class="channel-box">
+                    <div class="channel-icon" style="background:var(--red); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px;">DR</div>
+                    <div>
+                        <div style="font-weight:700; font-size:16px;">Drachin Official</div>
+                        <div style="font-size:12px; color:var(--text-sec);">1.2M Subscribers</div>
+                    </div>
+                    <div class="sub-btn">Subscribe</div>
+                </div>
+
+                <h3 style="margin-bottom:15px;">Rekomendasi Selanjutnya</h3>
+                <div id="sideGrid" class="rec-list"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const DB_FILE = "videos.txt";
+        
+        // Elements
+        const loader = document.getElementById('loaderPage');
+        const galleryView = document.getElementById('galleryView');
+        const playerView = document.getElementById('playerView');
+        const gridTarget = document.getElementById('gridTarget');
+        const sideGrid = document.getElementById('sideGrid');
+        const dmPlayer = document.getElementById('dmPlayer');
+        const webPlayer = document.getElementById('webPlayer');
+        const vidTitle = document.getElementById('vidTitle');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentId = urlParams.get('id');
+
+        async function initApp() {
+            try {
+                // Fetch database dengan timestamp anti-cache
+                const res = await fetch(DB_FILE + '?t=' + Date.now());
+                if (!res.ok) throw new Error("Gagal memuat videos.txt");
+                const text = await res.text();
+                
+                // Parse data: ID|JUDUL
+                const videos = text.split('\n')
+                    .filter(line => line.includes('|') && line.trim().length > 5)
+                    .map(line => {
+                        const p = line.split('|');
+                        return { id: p[0].trim(), title: p[1].trim() || "Video Tanpa Judul" };
+                    });
+
+                if (videos.length === 0) throw new Error("Daftar video kosong");
+
+                loader.style.display = 'none'; // Sembunyikan loader
+
+                if (currentId) {
+                    loadPlayer(currentId, videos);
+                } else {
+                    loadGallery(videos);
+                }
+
+            } catch (err) {
+                loader.innerHTML = `<div style="text-align:center; padding:20px; color:var(--red);">${err.message}<br><small>Pastikan file videos.txt ada di Cloudflare.</small></div>`;
             }
-
-        } catch (err) {
-            loader.innerHTML = "Error: " + err.message;
-        }
-    }
-
-    function renderGallery(videos) {
-        galleryPage.style.display = 'block';
-        playerPage.style.display = 'none';
-        
-        let html = '';
-        videos.forEach(v => {
-            let thumb = `https://www.dailymotion.com/thumbnail/video/${v.id}`;
-            if(v.id.startsWith('http')) thumb = 'https://via.placeholder.com/640x360/111/fff?text=VIDEO';
-            
-            html += `
-            <a href="?id=${encodeURIComponent(v.id)}" class="vid-card">
-                <div class="thumb-area">
-                    <img src="${thumb}" onerror="this.src='https://via.placeholder.com/640x360/333/fff?text=Play'" class="thumb-img" loading="lazy">
-                    <div class="duration">HD</div>
-                </div>
-                <div class="card-info">
-                    <div class="vid-title">${v.title}</div>
-                </div>
-            </a>`;
-        });
-        gridTarget.innerHTML = html;
-    }
-
-    function renderPlayer(idRaw, videos) {
-        galleryPage.style.display = 'none';
-        playerPage.style.display = 'block';
-        
-        const id = decodeURIComponent(idRaw);
-        const data = videos.find(v => v.id === id);
-        const title = data ? data.title : "Nonton Video";
-        
-        vidTitle.innerText = title;
-        document.title = title;
-
-        // Reset Player
-        dmPlayer.style.display = 'none'; dmPlayer.src = "";
-        webPlayer.style.display = 'none'; webPlayer.pause();
-
-        // LOGIKA DETEKSI (ID PENDEK/PANJANG = DAILYMOTION)
-        if (id.startsWith('http')) {
-            webPlayer.style.display = 'block';
-            webPlayer.src = id;
-            webPlayer.play();
-        } else {
-            dmPlayer.style.display = 'block';
-            // Tambahkan param queue-enable=false biar gak autoplay video lain
-            dmPlayer.src = `https://www.dailymotion.com/embed/video/${id}?autoplay=1&ui-logo=0&queue-enable=false&sharing-enable=false`;
         }
 
-        // --- REKOMENDASI (HANYA 2 VIDEO) ---
-        // Ambil video selain yg ditonton, lalu .slice(0, 2)
-        const others = videos.filter(v => v.id !== id).slice(0, 2);
-        
-        let recHtml = '';
-        others.forEach(v => {
-            let thumb = `https://www.dailymotion.com/thumbnail/video/${v.id}`;
-            if(v.id.startsWith('http')) thumb = 'https://via.placeholder.com/640x360/111/fff?text=VIDEO';
+        function loadGallery(videos) {
+            galleryView.style.display = 'block';
+            playerView.style.display = 'none';
             
-            recHtml += `
-            <a href="?id=${encodeURIComponent(v.id)}" class="rec-item">
-                <div class="rec-thumb">
-                    <img src="${thumb}" onerror="this.src='https://via.placeholder.com/640x360/333/fff?text=Play'" style="width:100%; height:100%; object-fit:cover;">
-                </div>
-                <div class="rec-info">${v.title}</div>
-            </a>`;
-        });
-        recList.innerHTML = recHtml;
-    }
-
-    init();
-</script>
-
-<script type="text/javascript">var _Hasync= _Hasync|| [];
-_Hasync.push(['Histats.start', '1,4654540,4,0,0,0,00010000']);
-_Hasync.push(['Histats.fasi', '1']);
-_Hasync.push(['Histats.track_hits', '']);
-(function() {
-var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
-hs.src = ('//s10.histats.com/js15_as.js');
-(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
-})();</script>
-<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4654540&101" alt="web stats script" border="0"></a></noscript>
-
-</body>
-</html>
+            let html = '';
+            videos.forEach(v => {
+                let thumb = `https://www.dailymotion.com/thumbnail/video/${v.id}`;
